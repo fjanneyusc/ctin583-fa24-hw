@@ -24,6 +24,8 @@ public class BarbieBirthday : MonoBehaviour
     // Transform for Barbie's party pinata
     [SerializeField] Transform pinata; 
 
+    //Testing out pushing to GitHub
+
     // The pinata's rotation along the X axis for the first successful hit (Quaternion)
     [SerializeField] Quaternion rotationX;
 
