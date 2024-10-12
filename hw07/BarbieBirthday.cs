@@ -46,8 +46,28 @@ public class BarbieBirthday : MonoBehaviour
     private Vector2 pinataHeight;
 
     // Update is called once per frame
+
+    private void OnCollisionEnter (Collision collision)
+    {
+
+        transform.eulerAngles = new Vector3(transform.eulerAngles.x, rotationY, transform.eulerAngles.z);
+
+        if (Collision.gameObject.CompareTag("Pinata"))
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            spawnManager.UpdateStrikes(1);
+            if (UpdateStrikes == 3)
+            {
+                gameOverText.gameObject.SetActive(true);
+            }
+        }
+    }
     void Update()
     {
+
         /*
         TODO: Problem 2: Barbie can only make a valid swing when she is looking directly at the pinata. She cannot swing at other objects, players, and items. 
         Check to make sure that Barbie is facing directly at the pinata. 
@@ -55,6 +75,11 @@ public class BarbieBirthday : MonoBehaviour
         * Hint: Make the object points towards the object. Look at returns a quaterion and takes in a vector
         */      
         Vector2 relativePosition = pinata.position - pinata.position;
+
+        if (Physics.Raycast(transform.position + transform.up, lastInteractDir, out RaycastHit raycastHit, interactDistance, pinata))
+            {
+            OnCollisionEnter;
+            }
 
         /*
         TODO: Problem 3: Barbie swings her bat and the bat hits the pinata. The pinata is now rotating along the x axis.
@@ -64,5 +89,29 @@ public class BarbieBirthday : MonoBehaviour
             * Hint: Check if two Quaternions are equal to each other. If they are, print out "[Names of Quaterions] are Equal". Else, print out "Quaternions are different"
             * Hint: How can we rotate our vector? Can we use Quaternion.Lerp and Quaternion.Slerp?
         */
+        public static class TransformExtensions
+{
+    public static void RotateAround(this Transform transform, Transform pivot, Quaternion rotation)
+    {  
+        RotateAround (transform, pivot.transform.position, rotation);
+        result = Quaternion.Euler(0,rotation, 0) * result;
+    } 
+
+    public static void RotateAround(this Transform transform, Vector3 pivotPoint, Quaternion rotation)
+    {   
+        rotation.ToAngleAxis(out var angle, out var axis);
+
+        transform.RotateAround(pivotPoint, axis, angle);
+
+        if (result == transform.RotateAround)
+        {
+            Debug.Log("[Names of Quaternions] are Equal")
+        }
+        else
+        {
+            Debug.Log("Quaternions are different");
+        }
+    }
+}
     }
 }
